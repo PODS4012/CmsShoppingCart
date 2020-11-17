@@ -10,10 +10,10 @@ using Microsoft.EntityFrameworkCore;
 namespace CmsShoppingCart.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class Pages : Controller
+    public class PagesController : Controller
     {
         private readonly CmsShoppingCartContext contex;
-        public Pages(CmsShoppingCartContext contex)
+        public PagesController(CmsShoppingCartContext contex)
         {
             this.contex = contex;
         }
