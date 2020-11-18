@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using CmsShoppingCart.Infrastructure;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -32,7 +33,7 @@ namespace CmsShoppingCart.Models
         [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
 
-        [NotMapped]
+        [NotMapped, FileExtension]
         public IFormFile ImageUpload { get; set; }
     }
 }

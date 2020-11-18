@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using CmsShoppingCart.Infrastructure;
@@ -43,6 +44,12 @@ namespace CmsShoppingCart
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            var cultureInfo = new CultureInfo("da-DK");
+            cultureInfo.NumberFormat.CurrencySymbol = "kr";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
