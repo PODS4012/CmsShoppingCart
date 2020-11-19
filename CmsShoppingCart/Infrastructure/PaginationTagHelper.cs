@@ -89,7 +89,7 @@ namespace CmsShoppingCart.Infrastructure
                 }
             }
 
-            if (PageNumber != PageCount)
+            if (PageNumber < PageCount)
             {
                 content.Append($"<li class='page-item'><a class='page-link' href='{PageTarget}?p={PageCount}'>{PageLast}</a></li>");
             }
