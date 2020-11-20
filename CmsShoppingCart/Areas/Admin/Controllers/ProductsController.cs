@@ -27,7 +27,7 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
         public async Task<IActionResult> Index(int p = 1)
         {
 
-            int pageSize = 2;
+            int pageSize = 4;
 
             var products = contex.Products.OrderByDescending(x => x.Id)
                                             .Include(x => x.Category)
