@@ -36,6 +36,8 @@ namespace CmsShoppingCart
                 //options.IdleTimeout = TimeSpan.FromDays(2);
             });
 
+            services.AddRouting(options => options.LowercaseUrls = true);
+
             services.AddControllersWithViews();
 
             services.AddDbContext<CmsShoppingCartContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CmsShoppingCartContext")));
@@ -58,7 +60,8 @@ namespace CmsShoppingCart
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                //app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithRedirects("/error/{0}");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -80,6 +83,12 @@ namespace CmsShoppingCart
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllerRoute(
+                    "error",
+                    "error/{statusCode}",
+                    defaults: new { controller = "Error", action = "HttpStatusCodeHandler" }
+                    );
+
                 endpoints.MapControllerRoute(
                     "pages", 
                     "{slug?}",

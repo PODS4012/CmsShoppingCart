@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using CmsShoppingCart.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CmsShoppingCart.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "admin")]
     [Area("Admin")]
     public class RolesController : Controller
     {
@@ -50,5 +52,49 @@ namespace CmsShoppingCart.Areas.Admin.Controllers
             return View();
         }
 
+        //GET /admin/roles/edit
+        public async Task<IActionResult> Edit(string id)
+        {
+            IdentityRole role = await roleManager.FindByIdAsync(id);
+
+            List<AppUser> members = new List<AppUser>();
+            List<AppUser> nonMembers = new List<AppUser>();
+
+            foreach (AppUser user in userManager.Users)
+            {
+                var list = await userManager.IsInRoleAsync(user, role.Name) ? members : nonMembers;
+                list.Add(user);
+            }
+
+            return View(new RoleEdit
+            {
+                Role = role,
+                Members = members,
+                NonMembers = nonMembers
+            });
+        }
+
+        //POST /admin/roles/edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(RoleEdit roleEdit)
+        {
+            IdentityResult result;
+
+            foreach (string userId in roleEdit.AddIds ?? new string[] { })
+            {
+                AppUser user = await userManager.FindByIdAsync(userId);
+                result = await userManager.AddToRoleAsync(user, roleEdit.RoleName);
+            }
+
+            foreach (string userId in roleEdit.DeleteIds?? new string[] { })
+            {
+                AppUser user = await userManager.FindByIdAsync(userId);
+                result = await userManager.RemoveFromRoleAsync(user, roleEdit.RoleName);
+            }
+
+            return Redirect(Request.Headers["Referer"].ToString());
+
+        }
     }
 }
